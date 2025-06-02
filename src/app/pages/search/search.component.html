@@ -1,0 +1,256 @@
+<!-- Shop Main Area Start Here -->
+<div class="shop-main-area">
+  <div class="container container-default custom-area">
+    <div class="row flex-row-reverse">
+      <div class="col-lg-9 col-12 col-custom widget-mt">
+        <!--shop toolbar start-->
+        <div class="shop_toolbar_wrapper mb-30">
+          <div class="shop_toolbar_btn">
+            <button data-role="grid_3" type="button" class="btn-grid-3" title="Grid"
+              [ngClass]="{ 'active': viewMode === 'GRID' }" (click)="viewMode = 'GRID'"><i
+                class="fa fa-th"></i></button>
+            <button data-role="grid_list" type="button" class="btn-list" title="List"
+              [ngClass]="{ 'active': viewMode === 'LIST'}" (click)="viewMode = 'LIST'"><i
+                class="fa fa-th-list"></i></button>
+          </div>
+          <div class="shop-select">
+            <form class="d-flex flex-column w-100" action="#">
+              <div class="form-group">
+                <select [formControl]="sortBy" class="form-control nice-select w-100">
+                  <option value="1">Alphabetically, A-Z</option>
+                  <option value="2">Sort by popularity</option>
+                  <option value="3">Sort by newness</option>
+                  <option value="4">Sort by price: low to high</option>
+                  <option value="5">Sort by price: high to low</option>
+                  <option value="6">Product Name: Z</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!--shop toolbar end-->
+        <!-- Shop Wrapper Start -->
+        <div class="row shop_wrapper" [ngClass]="{ 'grid_3' : viewMode === 'GRID', 'grid_list' : viewMode === 'LIST'}">
+          @if(products.length > 0) {
+          @for (item of products; track item.sku) {
+          <div class="col-custom product-area"
+            [ngClass]="{ 'col-lg-4 col-md-6 col-sm-6' : viewMode === 'GRID', 'col-12' : viewMode === 'LIST'}">
+            <div class="product-item">
+              <div class="single-product position-relative mr-0 ml-0">
+                <div class="product-image">
+                  <a routerLink="/product/1" class="d-block">
+                    <img src="assets/images/product/1.jpg" alt="" class="product-image-1 w-100">
+                    <img src="assets/images/product/2.jpg" alt="" class="product-image-2 position-absolute w-100">
+                  </a>
+                  <span class="onsale">Sale!</span>
+                  <div class="add-action d-flex flex-column position-absolute">
+                    <a title="Compare">
+                      <i class="lnr lnr-sync" data-toggle="tooltip" data-placement="left" title="Compare"></i>
+                    </a>
+                    <a title="Add To Wishlist">
+                      <i class="lnr lnr-heart" data-toggle="tooltip" data-placement="left" title="Wishlist"></i>
+                    </a>
+                    <a title="Quick View" (click)="onOpenQuickView(item)">
+                      <i class="lnr lnr-eye" data-toggle="tooltip" data-placement="left" title="Quick View"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="product-content">
+                  <div class="product-title">
+                    <h4 class="title-2"> <a>Flowers daisy pink stick</a></h4>
+                  </div>
+                  <div class="product-rating">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                  </div>
+                  <div class="price-box">
+                    <span class="regular-price ">{{600 | currency: 'PHP'}}</span>
+                    <span class="old-price"><del>{{700 | currency: 'PHP'}}</del></span>
+                  </div>
+                  <a class="btn product-cart">Add to Cart</a>
+                </div>
+                <div class="product-content-listview">
+                  <div class="product-title">
+                    <h4 class="title-2"> <a>Flowers daisy pink stick</a></h4>
+                  </div>
+                  <div class="product-rating">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                  </div>
+                  <div class="price-box">
+                    <span class="regular-price ">{{600 | currency: 'PHP'}}</span>
+                    <span class="old-price"><del>{{700 | currency: 'PHP'}}</del></span>
+                  </div>
+                  <p class="desc-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus
+                    vitae arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla tempus.</p>
+                  <div class="button-listview">
+                    <a class="btn product-cart button-icon flosun-button dark-btn" data-toggle="tooltip"
+                      data-placement="top" title="Add to Cart"> <span>Add to Cart</span> </a>
+                    <a class="list-icon" title="Compare">
+                      <i class="lnr lnr-sync" data-toggle="tooltip" data-placement="top" title="Compare"></i>
+                    </a>
+                    <a class="list-icon" title="Add To Wishlist">
+                      <i class="lnr lnr-heart" data-toggle="tooltip" data-placement="top" title="Wishlist"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+          } @else {
+          <!-- No Results Placeholder -->
+          <div class="text-center py-5">
+            <i style="font-size: 2rem;" class="fa fa-flower"></i>
+            <h4 class="text-muted">No products found</h4>
+            <p>Try searching for a different flower, occasion, or collection.</p>
+          </div>
+
+          }
+        </div>
+        <!-- Shop Wrapper End -->
+        <!-- Bottom Toolbar Start -->
+
+        <!-- Pagination Controls -->
+        <div class="row">
+          <div class="col-sm-12 col-custom">
+            <div class="toolbar-bottom d-flex flex-column flex-sm-row justify-content-between align-items-center">
+              <div class="pagination">
+                <ul class="d-flex align-items-center gap-2 list-unstyled mb-0">
+                  <li [class.disabled]="pageIndex === 0">
+                    <a (click)="goToPage(0)">&laquo;</a>
+                  </li>
+                  <li [class.disabled]="pageIndex === 0">
+                    <a (click)="goToPage(pageIndex - 1)">prev</a>
+                  </li>
+                  <li *ngFor="let page of pages" [class.current]="pageIndex === page">
+                    <a (click)="goToPage(page)">{{ page + 1 }}</a>
+                  </li>
+                  <li [class.disabled]="pageIndex === totalPages - 1">
+                    <a (click)="goToPage(pageIndex + 1)">next</a>
+                  </li>
+                  <li [class.disabled]="pageIndex === totalPages - 1">
+                    <a (click)="goToPage(totalPages - 1)">&raquo;</a>
+                  </li>
+                </ul>
+              </div>
+              <p class="desc-content text-center text-sm-right mb-0">
+                Showing {{ pageIndex * pageSize + 1 }} - {{ (pageIndex * pageSize + pageSize) > totalItems ? totalItems
+                : (pageIndex * pageSize + pageSize) }} of {{ totalItems }} result
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom Toolbar End -->
+      </div>
+      <div class="col-lg-3 col-12 col-custom">
+        <!-- Sidebar Widget Start -->
+        <aside class="sidebar_widget widget-mt">
+          <div class="widget_inner">
+
+            <div class="widget-list widget-mb-1">
+              <h3 class="widget-title">Price Filter</h3>
+              <!-- Widget Menu Start -->
+              <form action="#">
+                <div id="slider-range"></div>
+                <button type="submit">Filter</button>
+                <input type="text" name="text" id="amount" />
+              </form>
+              <!-- Widget Menu End -->
+            </div>
+            @if (collections.length > 0) {
+            <div class="widget-list widget-mb-1">
+              <h3 class="widget-title">Collections ({{collections.length}})</h3>
+              <!-- Widget Menu Start -->
+              <nav>
+                <ul class="mobile-menu p-0 m-0">
+                  @for(item of collections; track item.collectionId) {
+                  <li (click)="addFilter('COLLECTION', item.collectionId)"><a [ngStyle]="{
+                    'color': selectedCollection === item.collectionId ? '#E72463': '',
+                    'font-weight': selectedCollection === item.collectionId ? '900': '',
+                  }">{{item.name}}({{item.count}})</a></li>
+                  }
+                </ul>
+              </nav>
+              <a *ngIf="selectedCollection && selectedCollection !== ''" class="btn-link mt-4" (click)="addFilter('COLLECTION', null)">Clear</a>
+            </div>
+            }
+            @if (categories.length > 0) {
+            <div class="widget-list widget-mb-1">
+              <h3 class="widget-title">Categories ({{categories.length}})</h3>
+              <div class="sidebar-body">
+                <ul class="sidebar-list">
+                  @for(item of categories; track item.categoryId) {
+                  <li (click)="addFilter('CATEGORY', item.categoryId)"><a [ngStyle]="{
+                    'color': selectedCategory === item.categoryId ? '#E72463': '',
+                    'font-weight': selectedCategory === item.categoryId ? '900': '',
+                  }">{{item.name}}({{item.count}})</a></li>
+                  }
+                </ul>
+              </div>
+              <a *ngIf="selectedCategory && selectedCategory !== ''" class="btn-link mt-4" (click)="addFilter('CATEGORY', null)">Clear</a>
+            </div>
+            }
+            <div class="widget-list widget-mb-2">
+              <h3 class="widget-title">Color</h3>
+              <div class="sidebar-body">
+                <ul class="checkbox-container categories-list">
+                  <li>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck12">
+                      <label class="custom-control-label" for="customCheck12">black (20)</label>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck13">
+                      <label class="custom-control-label" for="customCheck13">red (6)</label>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck14">
+                      <label class="custom-control-label" for="customCheck14">blue (8)</label>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck11">
+                      <label class="custom-control-label" for="customCheck11">green (5)</label>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck15">
+                      <label class="custom-control-label" for="customCheck15">pink (4)</label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            @if (categories.length > 0) {
+            <div class="widget-list widget-mb-3">
+              <h3 class="widget-title">Tags</h3>
+              <div class="sidebar-body">
+                <ul class="tags">
+                  @for(item of categories; track item.categoryId) {
+                  <li><a>{{item.name}}</a></li>
+                  }
+                </ul>
+              </div>
+            </div>
+            }
+          </div>
+        </aside>
+        <!-- Sidebar Widget End -->
+      </div>
+    </div>
+  </div>
+</div>
+<app-quick-product-view-modal #quickView></app-quick-product-view-modal>
