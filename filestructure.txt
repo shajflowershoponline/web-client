@@ -70,6 +70,12 @@
                     |-- my-orders.component.spec.ts
                     |-- my-orders.component.ts
                     |-- my-orders.module.ts
+                |-- my-wish-list
+                    |-- my-wish-list.component.html
+                    |-- my-wish-list.component.scss
+                    |-- my-wish-list.component.spec.ts
+                    |-- my-wish-list.component.ts
+                    |-- my-wish-list.module.ts
             |-- ai-search
                 |-- ai-search.component.html
                 |-- ai-search.component.scss

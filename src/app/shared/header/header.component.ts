@@ -6,6 +6,8 @@ import { AiSearchService } from 'src/app/services/ai-search.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
+import { CustomerUser } from 'src/app/model/customer-user';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'header',
@@ -13,6 +15,7 @@ import { ProductService } from 'src/app/services/product.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
+  currentUser: CustomerUser;
   @Input() headerClass: string;
   promptPlaceholder = [];
   isOpenOffCanvas = false;
@@ -27,8 +30,10 @@ export class HeaderComponent {
     private readonly cartService: CartService,
     private readonly aiSearchService: AiSearchService,
     private readonly productService: ProductService,
+    private readonly storageService: StorageService,
     private router: Router, private route: ActivatedRoute
   ) {
+    this.currentUser = this.storageService.getCurrentUser();
     this.aiSearchService.init();
     this.aiSearchService.prompts$.subscribe(prompts => {
       this.promptPlaceholder = prompts;
@@ -63,6 +68,10 @@ export class HeaderComponent {
   get isSearchPage() {
     const currentUrl = this.router?.url ?? "";
     return currentUrl.startsWith("/ai-search") || currentUrl.startsWith('/search');
+  }
+
+  get isAuthenticated() {
+    return this.currentUser && this.currentUser?.customerUserCode;
   }
 
   triggerCartAnimation() {

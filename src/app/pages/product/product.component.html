@@ -62,16 +62,14 @@
           <div class="sku mb-3">
             <span>SKU: {{product?.sku}}</span>
           </div>
-          <p class="desc-content mb-5">Brighten someone's day with our vibrant medium-sized tulip bouquet. Handcrafted
-            with fresh, colorful tulips, this elegant arrangement is perfect for any occasion, delivering beauty and joy
-            in every stem.</p>
+          <p class="desc-content mb-5">{{product?.shortDesc}}</p>
           <div class="quantity-with_btn mb-5">
             <div class="quantity">
               <div class="cart-plus-minus">
-                <input #quantity class="cart-plus-minus-box" value="0" type="number">
-                <div class="dec qtybutton" (click)="quantity.value = quantity.value > 0 ? quantity.value - 1 : 0">-
+                <input class="cart-plus-minus-box" value="0" type="number" [(ngModel)]="addToCart">
+                <div class="dec qtybutton" (click)="addToCart = addToCart > 1 ? addToCart - 1 : 1">-
                 </div>
-                <div class="inc qtybutton" (click)="quantity.value = quantity.value + 1">+</div>
+                <div class="inc qtybutton" (click)="addToCart = addToCart + 1">+</div>
               </div>
             </div>
             <div class="add-to_cart">

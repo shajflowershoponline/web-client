@@ -44,13 +44,19 @@
           </div>
           }
           <div class="d-flex justify-content-between border-top pt-3 mt-4">
-            <div class="text-muted small">
-              Delivery attempt:
+            <div></div> <!-- Empty left column -->
+            <div class="text-end">
+              Delivery fee: {{ order.deliveryFee | currency:'PHP' }}
             </div>
-            <div class="fw-bold fs-5 text-danger">
+          </div>
+
+          <div class="d-flex justify-content-between border-top pt-3 mt-4">
+            <div></div> <!-- Empty left column -->
+            <div class="fw-bold fs-5 text-danger text-end">
               Order Total: {{ order.total | currency:'PHP' }}
             </div>
           </div>
+
         </div>
         }
         <!-- Pagination Controls -->

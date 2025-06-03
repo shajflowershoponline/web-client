@@ -17,14 +17,14 @@
                 <span class="menu-text"> Home</span>
               </a>
             </li>
-            <li>
+            <li *ngIf="isAuthenticated">
               <a [class.active]="isShopPage">
                 <span class="menu-text">Shop</span>
                 <i class="fa fa-angle-down"></i>
               </a>
               <ul class="dropdown-submenu dropdown-hover">
                 <li><a routerLink="search" routerLinkActive="active">Search Flower</a></li>
-                <li><a routerLink="ai-search" routerLinkActive="active">AI Search</a></li>
+                <!-- <li><a routerLink="ai-search" routerLinkActive="active">AI Search</a></li> -->
                 <li><a routerLink="categories" routerLinkActive="active">Categories</a></li>
                 <li><a routerLink="collections" routerLinkActive="active">Collections</a></li>
               </ul>
@@ -81,11 +81,11 @@
         <div class="filter-chip" [ngClass]="{ 'selected': searchType === 'KEYWORD'}" (click)="searchType = 'KEYWORD'">
           Find products
         </div>
-        <div class="filter-chip" [ngClass]="{ 'selected': searchType === 'AI'}"
+        <!-- <div class="filter-chip" [ngClass]="{ 'selected': searchType === 'AI'}"
           (click)="setRandomPrompt();searchType = 'AI'">
           <i class="fa fa-wand-magic me-1"></i>
           Search with AI
-        </div>
+        </div> -->
       </div>
 
       <!-- Prompt Input -->
@@ -133,7 +133,7 @@
             <li class="menu-item-has-children"><a [class.active]="isShopPage">Shop</a>
               <ul class="dropdown">
                 <li><a routerLink="search" routerLinkActive="active">Search Flower</a></li>
-                <li><a routerLink="ai-search" routerLinkActive="active">AI Search</a></li>
+                <!-- <li><a routerLink="ai-search" routerLinkActive="active">AI Search</a></li> -->
                 <li><a routerLink="categories" routerLinkActive="active">Categories</a></li>
                 <li><a routerLink="collections" routerLinkActive="active">Collections</a></li>
               </ul>

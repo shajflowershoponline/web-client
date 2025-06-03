@@ -111,7 +111,7 @@
             </div>
           </div>
           <small *ngIf="!currentUser.addressCoordinates || deliveryFee === 0" class="text-danger">Please setup a <a class="btn-link text-dark" href="/account/address">delivery address</a> to continue.</small>
-          <button href="checkout.html" [disabled]="subTotal === 0 || !currentUser.addressCoordinates || deliveryFee === 0" class="btn flosun-button primary-btn rounded-0 black-btn w-100" (click)="onCheckout()">Proceed To
+          <button href="checkout.html" [disabled]="subTotal === 0 || !currentUser.addressCoordinates || deliveryFee === 0 || hasCartItemsChanges" class="btn flosun-button primary-btn rounded-0 black-btn w-100" (click)="onCheckout()">Proceed To
             Checkout</button>
         </div>
       </div>
