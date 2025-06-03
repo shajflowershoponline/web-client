@@ -4,6 +4,7 @@ import { SearchComponent } from './search.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuickProductViewModalComponent } from 'src/app/shared/quick-product-view-modal/quick-product-view-modal.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 
 
@@ -16,6 +17,7 @@ import { QuickProductViewModalComponent } from 'src/app/shared/quick-product-vie
     FormsModule,
     ReactiveFormsModule,
     QuickProductViewModalComponent,
+    NgxSkeletonLoaderModule,
     RouterModule.forChild([
       { path: '', component: SearchComponent }
     ])

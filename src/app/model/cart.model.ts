@@ -10,5 +10,4 @@ export class CartItems {
   customerUser?: CustomerUser;
   product?: Product;
   total: number;
-  size: number;
 }

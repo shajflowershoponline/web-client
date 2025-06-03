@@ -16,9 +16,10 @@ export class CartItemComponent {
   currentUser: CustomerUser;
   cartItems: CartItems[] = [];
   checkoutModalRef: any;
+  cartCount = 0;
   constructor(private readonly cartService: CartService,
     private storageService: StorageService,
-          private router: Router) {
+    private router: Router) {
     this.currentUser = this.storageService.getCurrentUser();
   }
 
@@ -33,6 +34,15 @@ export class CartItemComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+
+    this.getItems();
+    this.cartService.cartCount$.subscribe(count => {
+      this.cartCount = count;
+      this.getItems();
+    });
+  }
+
+  getItems() {
     this.cartService.getItems(
       this.currentUser.customerUserId
     ).subscribe((res) => {
@@ -41,13 +51,16 @@ export class CartItemComponent {
         item.total = Number(item.quantity ?? 0) * Number(item.product?.price ?? 0);
         return item;
       });
+      this.cartItems = [];
       for (let item of items) {
         this.cartItems.push({
           ...item,
         });
       }
 
-      this.cartService.setCartCount(this.cartItems.length);
+      if(this.cartItems.length !== this.cartCount) {
+        this.cartService.setCartCount(this.cartItems.length);
+      }
     });
   }
 

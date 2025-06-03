@@ -7,6 +7,7 @@ import { ApiResponse } from '../model/api-response.model';
 import { Product } from '../model/product';
 import { Category } from '../model/category';
 import { Collection } from '../model/collection';
+import { CustomerUserWishlist } from '../model/customer-user-wish-list.model';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,7 @@ export class ProductService implements IServices {
   }): Observable<ApiResponse<{
       categories: Category[];
       collections: Collection[];
+      colors: { name: string; count: number}[];
     }>> {
     return this.http.post<any>(environment.apiBaseUrl + environment.api.product.getSearchFilter,
       params)

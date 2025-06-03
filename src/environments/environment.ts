@@ -56,6 +56,13 @@ export const environment = {
       getAdvanceSearch: "/product/page/",
       getSearchFilter: "/product/get-search-filter/",
       getByCode: "/product/",
+    },
+    customerUserWishlist: {
+      getAdvanceSearch: "/customer-user-wish-list/page/",
+      getByCode: "/customer-user-wish-list/",
+      getBySKU: "/customer-user-wish-list/get-by-sku/",
+      create: "/customer-user-wish-list/",
+      delete: "/customer-user-wish-list/",
     }
   }
 };

@@ -25,7 +25,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/ai-search/ai-search.module').then(m => m.AISearchModule)
   },
   {
-    path: 'product/:id',
+    path: 'product/:sku',
     canActivate: [AuthGuard],
     data: { title: 'Search', footerClass: 'mt-no-text' },
     loadChildren: () => import('./pages/product/product.module').then(m => m.ProductModule)

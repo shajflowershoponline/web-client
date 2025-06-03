@@ -13,10 +13,11 @@ import { NgOtpInputModule } from 'ng-otp-input';
 import { AddressComponent } from './address/address.component';
 import { LocationPickerComponent } from 'src/app/shared/location-picker/location-picker.component';
 import { LocationMapViewerComponent } from 'src/app/shared/location-map-viewer/location-map-viewer.component';
+import { MyWishListComponent } from './my-wish-list/my-wish-list.component';
 
 @NgModule({
   declarations: [
-    AccountComponent,AccountDetailsComponent,MyOrdersComponent,ChangePasswordComponent,AddressComponent,
+    AccountComponent,AccountDetailsComponent,MyWishListComponent,MyOrdersComponent,ChangePasswordComponent,AddressComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +50,12 @@ import { LocationMapViewerComponent } from 'src/app/shared/location-map-viewer/l
           MyOrdersComponent ,
           canActivate: [AuthGuard],
           data: { title: 'My Orders', footerClass: 'mt-no-text' },
+        },
+        { path: 'my-wish-list',
+          component:
+          MyWishListComponent ,
+          canActivate: [AuthGuard],
+          data: { title: 'My Wishlist', footerClass: 'mt-no-text' },
         },
         { path: 'change-password',
           component: ChangePasswordComponent ,

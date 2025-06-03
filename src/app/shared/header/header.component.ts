@@ -11,7 +11,6 @@ import { ProductService } from 'src/app/services/product.service';
   selector: 'header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent {
   @Input() headerClass: string;
@@ -23,7 +22,7 @@ export class HeaderComponent {
 
   searchKeyword = null;
   showSearchBar = false;
-
+  animateCartCount = false;
   constructor(
     private readonly cartService: CartService,
     private readonly aiSearchService: AiSearchService,
@@ -39,24 +38,36 @@ export class HeaderComponent {
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
         // Option 1: Simple URL string
+        if (document.querySelector("#mobileMenu")) {
+          document.querySelector("#mobileMenu").classList.remove("open");
+          document.body.classList.remove("fix");
+        }
         const url = event.urlAfterRedirects;
-        if(!(url.includes("/ai-search") || url.includes("/search"))) {
+        if (!(url.includes("/ai-search") || url.includes("/search"))) {
           this.searchKeyword = null;
           this.showSearchBar = false;
         } else {
           this.showSearchBar = true;
         }
       });
+    this.productService.search$.subscribe(res => {
+      this.searchKeyword = res ?? "";
+    });
   }
 
   get isShopPage() {
-    const currentUrl = this.router?.url??"";
+    const currentUrl = this.router?.url ?? "";
     return currentUrl.startsWith("/ai-search") || currentUrl.startsWith('/search') || currentUrl.startsWith('/categories') || currentUrl.startsWith('/collections');
   }
 
   get isSearchPage() {
-    const currentUrl = this.router?.url??"";
+    const currentUrl = this.router?.url ?? "";
     return currentUrl.startsWith("/ai-search") || currentUrl.startsWith('/search');
+  }
+
+  triggerCartAnimation() {
+    this.animateCartCount = false;
+    setTimeout(() => this.animateCartCount = true, 10); // retrigger animation
   }
 
   ngOnInit(): void {
@@ -65,6 +76,7 @@ export class HeaderComponent {
 
     this.cartService.cartCount$.subscribe(count => {
       this.cartCount = count;
+      this.triggerCartAnimation();
     });
   }
 
@@ -74,6 +86,16 @@ export class HeaderComponent {
   }
 
   ngAfterViewInit() {
+    document.querySelectorAll('.menu-item-has-children > a').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const parent = link.parentElement;
+        parent.classList.toggle('open');
+        const dropdown = parent.querySelector('.dropdown');
+        if (dropdown) dropdown.classList.toggle('show');
+      });
+    });
+
     const target = document.querySelector('.main-header');
 
     if (target) {
@@ -83,10 +105,10 @@ export class HeaderComponent {
           if (mutation.attributeName === 'class') {
             const classList = Array.from((mutation.target as HTMLElement).classList);;
             // Trigger your custom logic here
-            if (this.showSearchBar && !prevClass.includes('sticky') && classList.some(x => x === 'sticky')) {
-              this.showSearchBar = false;
-            } else if (!classList.some(x => x === 'sticky')) {
-              // this.showSearchBar = true;
+            if (!((this.router?.url ?? "").startsWith("/ai-search") || (this.router?.url ?? "").startsWith('/search'))) {
+              if (this.showSearchBar && !prevClass.includes('sticky') && classList.some(x => x === 'sticky')) {
+                this.showSearchBar = false;
+              }
             }
             prevClass = classList;
           }
@@ -100,8 +122,11 @@ export class HeaderComponent {
     }
   }
 
-  onSearchToggleClick (){
+  onSearchToggleClick() {
     this.showSearchBar = this.isSearchPage ? this.isSearchPage : !this.showSearchBar;
+    if (((this.router?.url ?? "").startsWith("/ai-search") || (this.router?.url ?? "").startsWith('/search'))) {
+      this.scrollToTopAndFocus();
+    }
   }
 
   scrollToTopAndFocus(): void {
@@ -132,15 +157,23 @@ export class HeaderComponent {
   submitSearch() {
     const trimmed = this.searchKeyword.trim();
     if (this.searchType === "AI") {
-      this.router.navigate(['/ai-search'], {
-        state: { prompt: trimmed },
+      this.router.navigate([], {
+        queryParams: { q: trimmed },
+        queryParamsHandling: 'merge', // Keep other params if needed
       });
     } else {
-      this.router.navigate(['/search'], {
-        state: { prompt: trimmed },
-      });
+      // this.router.navigate(['/search'], {
+      //   state: { prompt: trimmed },
+      // });
     }
     this.productService.setSearch(trimmed);
     this.scrollToTopAndFocus();
+  }
+
+  onMobileMenuClick() {
+    if (document.querySelector("#mobileMenu")) {
+      document.querySelector("#mobileMenu").classList.toggle("open");
+      document.body.classList.toggle("fix");
+    }
   }
 }

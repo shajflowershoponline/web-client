@@ -6,7 +6,6 @@ export class OrderItems {
   price: string;
   totalAmount: string;
   active: boolean;
-  size: number;
   order: Order;
   product: Product;
 }

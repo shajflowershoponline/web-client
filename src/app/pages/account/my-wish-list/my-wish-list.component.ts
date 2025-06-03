@@ -4,19 +4,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { CustomerUser } from 'src/app/model/customer-user';
+import { CustomerUserWishlist } from 'src/app/model/customer-user-wish-list.model';
 import { Order } from 'src/app/model/order.model';
+import { Product } from 'src/app/model/product';
+import { CartService } from 'src/app/services/cart.service';
+import { CustomerUserWishlistService } from 'src/app/services/customer-user-wish-list.service';
+import { CustomerUserService } from 'src/app/services/customer-user.service';
 import { LoaderService } from 'src/app/services/loader.service';
 import { MODAL_TYPE, ModalService } from 'src/app/services/modal.service';
 import { OrderService } from 'src/app/services/order.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
-  selector: 'app-my-orders',
-  templateUrl: './my-orders.component.html',
-  styleUrls: ['./my-orders.component.scss']
+  selector: 'app-my-wish-list',
+  templateUrl: './my-wish-list.component.html',
+  styleUrls: ['./my-wish-list.component.scss']
 })
-export class MyOrdersComponent {
-  orders: Order[] = [];
+export class MyWishListComponent {
+  customerUserWishlists: CustomerUserWishlist[] = [];
   searchCtrl = new FormControl();
   isLoading = false;
   pageIndex = 0;
@@ -25,16 +30,31 @@ export class MyOrdersComponent {
   totalPages = 0;
   pages: number[] = [];
   error;
+  cartCount = 0;
   isProcessing = false;
   currentUser: CustomerUser;
   constructor(
-    private readonly orderService: OrderService,
+    private readonly customerUserWishlistService: CustomerUserWishlistService,
+    private readonly cartService: CartService,
     private readonly modalService: ModalService,
     private readonly loaderService: LoaderService,
     private readonly snackBar: MatSnackBar,
     private storageService: StorageService,
     private router: Router) {
     this.currentUser = this.storageService.getCurrentUser();
+    this.cartService.cartCount$.subscribe(res => {
+      this.cartCount = res;
+    });
+  }
+
+
+  get startItem() {
+    return (this.pageIndex - 1) * this.pageSize + 1;
+  }
+
+  get endItem() {
+    const end = this.pageIndex * this.pageSize;
+    return end > this.total ? this.total : end;
   }
 
   get isAuthenticated() {
@@ -60,7 +80,7 @@ export class MyOrdersComponent {
   getPaginated(key = "") {
     try {
       this.isLoading = true;
-      this.orderService.getAdvanceSearch({
+      this.customerUserWishlistService.getAdvanceSearch({
         customerUserId: this.currentUser?.customerUserId,
         keywords: key,
         pageIndex: this.pageIndex,
@@ -68,7 +88,7 @@ export class MyOrdersComponent {
       }).subscribe(async res => {
         this.isLoading = false;
         if (res.success) {
-          this.orders = res.data.results;
+          this.customerUserWishlists = res.data.results;
           this.total = res.data.total;
           this.totalPages = Math.ceil(this.total / this.pageSize);
           this.pages = this.generatePageArray();
@@ -107,32 +127,102 @@ export class MyOrdersComponent {
     return pages;
   }
 
-  onCancelOrder(orderCode) {
+  onAddToCart(product: Product) {
     try {
-      if (!this.isAuthenticated) {
-        window.location.href = "login";
-      }
-      this.isProcessing = true;
-      this.loaderService.show();
       this.modalService.openPromptModal({
-        header: "Confirm Cancellation!",
-        description: `Are you sure you want to cancel this order? This action cannot be undone and the customer will be notified.`,
-        confirmText: "Cancel Order",
+        header: "Add to Cart",
+        description: `Do you want to add "${product.name}" to your cart?`,
+        confirmText: "Yes",
         confirm: () => {
+          this.isProcessing = true;
+          this.loaderService.show();
           this.modalService.close(MODAL_TYPE.PROMPT);
-          this.orderService.updateStatus(orderCode, {
-            status: "CANCELLED"
+          this.cartService.create({
+            productId: product?.productId,
+            customerUserId: this.currentUser?.customerUserId,
+            quantity: "1",
+            price: product?.price,
           }).subscribe(res => {
             this.isProcessing = false;
             this.loaderService.hide();
             if (res.success) {
               this.modalService.openResultModal({
                 success: true,
-                header: "Order Cancelled!",
-                description: `The order has been successfully marked as Cancelled.`,
+                header: "Flower Added!",
+                description: "Added to cart successfully!",
                 confirm: () => {
                   this.modalService.close(MODAL_TYPE.RESULT);
-                  this.getPaginated("");
+                  this.cartService.setCartCount(this.cartCount + 1);
+                }
+              });
+            } else {
+              this.error = res.message;
+              this.snackBar.open(this.error, 'close', { panelClass: ['style-error'] });
+              this.modalService.openResultModal({
+                success: false,
+                header: "Error Adding to Cart!",
+                description: this.error,
+                confirm: () => {
+                  this.modalService.closeAll();
+                }
+              });
+            }
+          }, (res) => {
+          this.isProcessing = false;
+          this.loaderService.hide();
+            this.error = res.error.message;
+            this.snackBar.open(this.error, 'close', { panelClass: ['style-error'] });
+            this.modalService.openResultModal({
+              success: false,
+              header: "Error Adding to Cart!",
+              description: this.error,
+              confirm: () => {
+                this.modalService.closeAll();
+              }
+            });
+          });
+        }
+      });
+    } catch (ex) {
+      this.isProcessing = false;
+      this.loaderService.hide();
+      this.error = ex.message;
+      this.snackBar.open(this.error, 'close', { panelClass: ['style-error'] });
+      this.modalService.openResultModal({
+        success: false,
+        header: "Error Adding to Cart!",
+        description: this.error,
+        confirm: () => {
+          this.modalService.closeAll();
+        }
+      });
+    }
+  }
+
+  onDelete(customerUserWishlist: CustomerUserWishlist) {
+    try {
+      if (!this.isAuthenticated) {
+        window.location.href = "login";
+      }
+      this.modalService.openPromptModal({
+        header: "Remove item!",
+        description: `Do you want to remove "${customerUserWishlist?.product?.name}" to your wishlist?`,
+        confirmText: "Yes remove",
+        confirm: () => {
+          this.isProcessing = true;
+          this.loaderService.show();
+          this.modalService.close(MODAL_TYPE.PROMPT);
+          this.customerUserWishlistService.delete(customerUserWishlist?.customerUserWishlistId).subscribe(res => {
+            this.isProcessing = false;
+            this.loaderService.hide();
+            if (res.success) {
+              this.modalService.openResultModal({
+                success: true,
+                header: "Flower removed!",
+                description: "Flower removed from wishlist successfully!",
+                confirm: () => {
+                  this.modalService.close(MODAL_TYPE.RESULT);
+                  this.getPaginated();
                 }
               });
             } else {
@@ -141,7 +231,7 @@ export class MyOrdersComponent {
               this.loaderService.hide();
               this.modalService.openResultModal({
                 success: false,
-                header: "Failed to Cancel order. Try Again!",
+                header: "Error removing from wishlist. Try Again!",
                 description: this.error,
                 confirm: () => {
                   this.modalService.closeAll();
@@ -157,7 +247,7 @@ export class MyOrdersComponent {
             this.loaderService.hide();
             this.modalService.openResultModal({
               success: false,
-              header: "Failed to Cancel order. Try Again!",
+              header: "Error removing from wishlist. Try Again!",
               description: this.error,
               confirm: () => {
                 this.modalService.closeAll();
@@ -175,7 +265,7 @@ export class MyOrdersComponent {
       this.loaderService.hide();
       this.modalService.openResultModal({
         success: false,
-        header: "Failed to Cancel order. Try Again!",
+        header: "Error removing from wishlist. Try Again!",
         description: this.error,
         confirm: () => {
           this.modalService.closeAll();

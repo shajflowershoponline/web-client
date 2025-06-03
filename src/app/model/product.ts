@@ -4,6 +4,7 @@ import { ProductCollection } from "././product-collection";
 import { ProductImage } from "././product-image";
 import { Discounts } from "./discounts";
 import { GiftAddOns } from "./gift-add-ons";
+import { CustomerUserWishlist } from "./customer-user-wish-list.model";
 export class Product {
   productId: string;
   sku: string | null;
@@ -13,6 +14,8 @@ export class Product {
   discountPrice: string;
   size: number; // 1 | 2 | 3
   longDesc: string;
+  interested: number;
+  iAmInterested: boolean;
   active: boolean;
   category: Category;
   thumbnailFile: File;
@@ -20,4 +23,5 @@ export class Product {
   productImages: ProductImage[];
   selectedGiftAddOns: GiftAddOns[];
   selectedDiscounts: Discounts[];
+  customerUserWishlist: CustomerUserWishlist;
 }

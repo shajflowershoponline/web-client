@@ -19,6 +19,7 @@ import { DateAdapter } from '@angular/material/core';
 import { CartItemComponent } from './shared/cart-item/cart-item.component';
 import { LocationPickerComponent } from './shared/location-picker/location-picker.component';
 import { SystemConfigService } from './services/system-config.service';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 export function initConfig(systemConfigService: SystemConfigService) {
   return () => systemConfigService.init();

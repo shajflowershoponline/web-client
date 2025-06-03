@@ -23,6 +23,7 @@
             |-- category.ts
             |-- collection.ts
             |-- customer-coupon.model.ts
+            |-- customer-user-wish-list.model.ts
             |-- customer-user.ts
             |-- discounts.ts
             |-- file.model.ts
@@ -162,6 +163,8 @@
             |-- cart.service.ts
             |-- category.service.spec.ts
             |-- category.service.ts
+            |-- customer-user-wish-list.service.spec.ts
+            |-- customer-user-wish-list.service.ts
             |-- customer-user.service.spec.ts
             |-- customer-user.service.ts
             |-- delivery.service.spec.ts
@@ -276,7 +279,6 @@
                 |-- nice-select.min.css
                 |-- swiper-bundle.min.css
             |-- style.css
-            |-- style.scss
             |-- vendor
                 |-- bootstrap.min.css
                 |-- font.awesome.min.css
@@ -406,6 +408,7 @@
             |-- testimonial
                 |-- testimonial1.jpg
                 |-- testimonial2.jpg
+            |-- thumbnail-product.png
             |-- ui-icon
                 |-- ui-bg_flat_0_aaaaaa_40x100.png
                 |-- ui-icons_444444_256x240.png

@@ -19,7 +19,7 @@
             </li>
             <li>
               <a [class.active]="isShopPage">
-                <span class="menu-text" >Shop</span>
+                <span class="menu-text">Shop</span>
                 <i class="fa fa-angle-down"></i>
               </a>
               <ul class="dropdown-submenu dropdown-hover">
@@ -54,11 +54,17 @@
             <li class="minicart-wrap">
               <a class="minicart-btn toolbar-btn">
                 <i class="fa fa-shopping-cart"></i>
-                <span class="cart-item_count" *ngIf="cartCount > 0">{{cartCount}}</span>
+                <span class="cart-item_count" [class.animate-cart-bounce]="animateCartCount"
+                  [ngStyle]="{ 'display': cartCount > 0 ? 'block' : 'none'}">{{cartCount}}</span>
               </a>
               <div class="cart-item-wrapper dropdown-sidemenu dropdown-hover-2">
                 <app-cart-item></app-cart-item>
               </div>
+            </li>
+            <li class="mobile-menu-btn">
+              <a class="off-canvas-menu-btn" (click)="onMobileMenuClick()">
+                <i class="fa fa-bars"></i>
+              </a>
             </li>
           </ul>
         </div>
@@ -66,16 +72,17 @@
     </div>
   </div>
   <!-- AI Prompt Style Search Start -->
-  <div class="ai-search-area section mt-30" [ngClass]="{ 'hidden': !showSearchBar }">
+  <div class="ai-search-area section" [ngClass]="{ 'hidden': !showSearchBar }">
     <div class="container text-center mb-30">
-      <h2 class="fw-bold mb-3" style="color: #b82c47;">What would you like SHAJ AI to find for you?</h2>
+      <h2 *ngIf="searchType === 'AI'" class="fw-bold mb-3" style="color: #b82c47;">What would you like SHAJ AI to find for you?</h2>
 
       <!-- Filter Chips -->
       <div class="selected-filters d-flex flex-wrap justify-content-center gap-2 mb-3">
         <div class="filter-chip" [ngClass]="{ 'selected': searchType === 'KEYWORD'}" (click)="searchType = 'KEYWORD'">
           Find products
         </div>
-        <div class="filter-chip" [ngClass]="{ 'selected': searchType === 'AI'}" (click)="setRandomPrompt();searchType = 'AI'">
+        <div class="filter-chip" [ngClass]="{ 'selected': searchType === 'AI'}"
+          (click)="setRandomPrompt();searchType = 'AI'">
           <i class="fa fa-wand-magic me-1"></i>
           Search with AI
         </div>
@@ -88,13 +95,14 @@
           [placeholder]="searchType === 'KEYWORD' ? 'Search flower' : searchPlaceholder"></textarea>
 
         <!-- Clear Button (X) -->
-        <button *ngIf="searchKeyword?.trim()" type="button" class="btn-clear position-absolute"
-          (click)="searchKeyword=''">
+        <button *ngIf="(searchKeyword??'').trim() !== ''" type="button" class="btn-clear position-absolute"
+          (click)="searchKeyword='';submitSearch()">
           <i class="fa fa-times"></i>
         </button>
 
         <!-- Submit Button (→) -->
-        <button [disabled]="!searchKeyword || searchKeyword?.trim() === ''" type="button" class="btn-submit position-absolute" (click)="submitSearch()">
+        <button [disabled]="!searchKeyword || searchKeyword?.trim() === ''" type="button"
+          class="btn-submit position-absolute" (click)="submitSearch()">
           <i class="fa fa-arrow-right"></i>
         </button>
       </div>
@@ -107,3 +115,35 @@
 
 </div>
 <!-- Main Header Area End -->
+
+<!-- off-canvas menu start -->
+<aside class="off-canvas-wrapper" id="mobileMenu">
+  <div class="off-canvas-overlay" (click)="onMobileMenuClick()"></div>
+  <div class="off-canvas-inner-content">
+    <div class="btn-close-off-canvas" (click)="onMobileMenuClick()">
+      <i class="fa fa-times"></i>
+    </div>
+    <div class="off-canvas-inner">
+      <!-- mobile menu start -->
+      <div class="mobile-navigation">
+        <!-- mobile menu navigation start -->
+        <nav>
+          <ul class="mobile-menu">
+            <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+            <li class="menu-item-has-children"><a [class.active]="isShopPage">Shop</a>
+              <ul class="dropdown">
+                <li><a routerLink="search" routerLinkActive="active">Search Flower</a></li>
+                <li><a routerLink="ai-search" routerLinkActive="active">AI Search</a></li>
+                <li><a routerLink="categories" routerLinkActive="active">Categories</a></li>
+                <li><a routerLink="collections" routerLinkActive="active">Collections</a></li>
+              </ul>
+            </li>
+            <li><a routerLink="/about-us" routerLinkActive="active">About Us</a></li>
+            <li><a routerLink="/contact-us" routerLinkActive="active">Contact</a></li>
+          </ul>
+        </nav>
+        <!-- mobile menu navigation end -->
+      </div>
+    </div>
+  </div>
+</aside>
