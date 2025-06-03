@@ -2,7 +2,7 @@ export const environment = {
   appName: "Shaj Flower shop",
   production: true,
   oneSignalAppId: "09c8c0ed-5d53-42f9-8384-c66c217bd87e",
-  apiBaseUrl: "https://shaj-flower-shop-api.vercel.app/api/v1",
+  apiBaseUrl: "https://shaj-flower-shop-api-eight.vercel.app/api/v1",
   openRouteServiceAPIKey: "5b3ce3597851110001cf6248a5e16664c28b4743a047d680fc89228e",
   maximLocationServiceURL: "https://client-sea.taximaxim.com/en-US/service",
   api: {
