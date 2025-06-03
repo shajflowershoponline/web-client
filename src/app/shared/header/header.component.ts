@@ -166,14 +166,15 @@ export class HeaderComponent {
   submitSearch() {
     const trimmed = this.searchKeyword.trim();
     if (this.searchType === "AI") {
-      this.router.navigate([], {
+      // this.router.navigate([], {
+      //   queryParams: { q: trimmed },
+      //   queryParamsHandling: 'merge', // Keep other params if needed
+      // });
+    } else {
+      this.router.navigate(['/search'], {
         queryParams: { q: trimmed },
         queryParamsHandling: 'merge', // Keep other params if needed
       });
-    } else {
-      // this.router.navigate(['/search'], {
-      //   state: { prompt: trimmed },
-      // });
     }
     this.productService.setSearch(trimmed);
     this.scrollToTopAndFocus();
