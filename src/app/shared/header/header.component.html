@@ -45,13 +45,13 @@
       <div class="col-lg-2 col-md-6 col-6 col-custom">
         <div class="header-right-area main-nav">
           <ul class="nav">
-            <li class="sidemenu-wrap">
+            <li class="sidemenu-wrap" *ngIf="isAuthenticated">
               <a (click)="onSearchToggleClick()"><i class="fa fa-search"></i> </a>
             </li>
-            <li class="sidemenu-wrap">
+            <li class="sidemenu-wrap" *ngIf="isAuthenticated">
               <a routerLink="/account"><i class="fa fa-user-circle"></i> </a>
             </li>
-            <li class="minicart-wrap">
+            <li class="minicart-wrap" *ngIf="isAuthenticated">
               <a class="minicart-btn toolbar-btn">
                 <i class="fa fa-shopping-cart"></i>
                 <span class="cart-item_count" [class.animate-cart-bounce]="animateCartCount"
@@ -130,7 +130,7 @@
         <nav>
           <ul class="mobile-menu">
             <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
-            <li class="menu-item-has-children"><a [class.active]="isShopPage">Shop</a>
+            <li class="menu-item-has-children" *ngIf="isAuthenticated"><a [class.active]="isShopPage">Shop</a>
               <ul class="dropdown">
                 <li><a routerLink="search" routerLinkActive="active">Search Flower</a></li>
                 <!-- <li><a routerLink="ai-search" routerLinkActive="active">AI Search</a></li> -->
