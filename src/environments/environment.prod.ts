@@ -50,6 +50,7 @@ export const environment = {
     },
     product: {
       getAdvanceSearch: "/product/page/",
+      getClientPagination: "/product/client-pagination/",
       getSearchFilter: "/product/get-search-filter/",
       getByCode: "/product/",
     },
@@ -59,6 +60,11 @@ export const environment = {
       getBySKU: "/customer-user-wish-list/get-by-sku/",
       create: "/customer-user-wish-list/",
       delete: "/customer-user-wish-list/",
+    },
+    discounts: {
+      getAdvanceSearch: "/product/page/",
+      getByCode: "/product/",
+      create: "/product/",
     }
   }
 };
