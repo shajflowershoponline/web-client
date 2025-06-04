@@ -90,18 +90,18 @@
                   <td>Sub Total</td>
                   <td>{{subTotal | currency: 'PHP'}}</td>
                 </tr>
-                <tr *ngIf="currentDiscount && discountAmount > 0">
-                  <td>Discount</td>
-                  <td>{{discountAmount | currency: 'PHP'}}({{currentDiscount.type === 'PERCENTAGE' ? '10%' : ''}})</td>
-                </tr>
                 <tr>
                   <td>
                     Delivery fee
                     <br>
                     <small *ngIf="!currentUser.addressCoordinates || deliveryFee === 0" class="text-danger">No delivery address.</small></td>
                   <td>
-                    {{deliveryFee | currency: 'PHP'}}
+                    {{(deliveryFee) | currency: 'PHP'}}
                   </td>
+                </tr>
+                <tr *ngIf="currentDiscount && discountAmount > 0">
+                  <td>Discount</td>
+                  <td class="discount">{{(discountAmount * -1) | currency: 'PHP'}}({{currentDiscount.type === 'PERCENTAGE' ? '10%' : ''}})</td>
                 </tr>
                 <tr class="total">
                   <td>Total</td>

@@ -18,7 +18,7 @@
               <div class="form-group">
                 <select [formControl]="sortBy" class="form-control nice-select w-100">
                   <option [value]="1">Alphabetically, A-Z</option>
-                  <option [value]="3">Sort by popularity</option>
+                  <option [value]="2">Sort by popularity</option>
                   <option [value]="3">Sort by price: low to high</option>
                   <option [value]="4">Sort by price: high to low</option>
                   <option [value]="5">Alphabetically, Z-A</option>
@@ -39,15 +39,21 @@
               <div class="single-product position-relative mr-0 ml-0">
                 <div class="product-image">
                   <a routerLink="/product/{{item?.sku}}" class="d-block">
-                    <div *ngFor="let image of item?.productImages | slice:0:2; let i = index">
+                    <!-- <div *ngFor="let image of item?.productImages | slice:0:2; let i = index">
                       <img [src]="image.file?.url" alt="" class="product-image-1 w-100" *ngIf="i === 0">
-                      <img [src]="image.file?.url" alt="" class="product-image-2 position-absolute w-100" *ngIf="i === 1">
+                      <img [src]="image.file?.url" alt="" class="product-image-2 position-absolute w-100"
+                        *ngIf="i === 1">
+                    </div> -->
+                    <div *ngFor="let image of item.productImages | slice:0:2; let i = index">
+                      <img [src]="image.file.url" [ngClass]="{ 'product-image-1 w-100': i === 0, 'product-image-2 position-absolute w-100': i === 1}" alt="Image {{ i + 1 }}">
                     </div>
+
                   </a>
-                  <span *ngIf="item.productCollections.length > 0" class="onsale">Sale!</span>
+                  <span *ngIf="item.isSale" class="onsale">Sale!</span>
                   <div class="add-action d-flex flex-column position-absolute">
                     <a title="Add To Wishlist" (click)="onAddToWishlist(item)">
-                      <i [class.active]="item.iAmInterested" class="lnr lnr-heart" data-toggle="tooltip" data-placement="left" title="Wishlist"></i>
+                      <i [class.active]="item.iAmInterested" class="lnr lnr-heart" data-toggle="tooltip"
+                        data-placement="left" title="Wishlist"></i>
                     </a>
                     <a title="Quick View" (click)="onOpenQuickView(item)">
                       <i class="lnr lnr-eye" data-toggle="tooltip" data-placement="left" title="Quick View"></i>

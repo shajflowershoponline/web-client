@@ -15,10 +15,12 @@ export class Product {
   size: number; // 1 | 2 | 3
   longDesc: string;
   interested: number;
+  isSale: boolean;
   iAmInterested: boolean;
   active: boolean;
   category: Category;
   thumbnailFile: File;
+  discountTagsIds: string;
   productCollections: ProductCollection[];
   productImages: ProductImage[];
   selectedGiftAddOns: GiftAddOns[];

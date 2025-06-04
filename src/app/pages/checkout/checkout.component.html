@@ -122,14 +122,14 @@
                   <th>Cart Subtotal</th>
                   <td class="text-center"><span class="amount">{{subTotal | currency: 'PHP'}}</span></td>
                 </tr>
-                <tr class="cart-subtotal" *ngIf="currentDiscount && discountAmount > 0">
-                  <th>Discount</th>
-                  <td class="text-center"><span class="amount">{{discountAmount | currency:
-                      'PHP'}}({{currentDiscount.type === 'PERCENTAGE' ? '10%' : ''}})</span></td>
-                </tr>
                 <tr class="delivery-fee">
                   <th>Delivery fee</th>
                   <td class="text-center"><span class="amount">{{deliveryFee | currency: 'PHP'}}</span></td>
+                </tr>
+                <tr class="cart-subtotal" *ngIf="currentDiscount && discountAmount > 0">
+                  <th>Discount</th>
+                  <td class="text-center discount"><span class="amount">{{discountAmount | currency:
+                      'PHP'}}({{currentDiscount.type === 'PERCENTAGE' ? '10%' : ''}})</span></td>
                 </tr>
                 <tr class="order-total">
                   <th>Order Total</th>

@@ -23,13 +23,14 @@ export class ProductService implements IServices {
     this.searchSubject.next(search);
   }
 
-  getAdvanceSearch(params:{
+  getClientPagination(params:{
+    customerUserId?: any,
     order?: any,
     columnDef?: { apiNotation: string; filter?: string }[],
     pageSize?: number,
     pageIndex?: number
   }): Observable<ApiResponse<{ results: Product[]; categories: Category[]; total: number}>> {
-    return this.http.post<any>(environment.apiBaseUrl + environment.api.product.getAdvanceSearch,
+    return this.http.post<any>(environment.apiBaseUrl + environment.api.product.getClientPagination,
       params)
     .pipe(
       tap(_ => this.log('product')),

@@ -124,24 +124,36 @@ export class SearchComponent {
         this.order = { price: "ASC" };
       } else if (Number(this.sortBy.value ?? 0) === 4) {
         this.order = { price: "DESC" };
+      } else if (Number(this.sortBy.value ?? 0) === 5) {
+        this.order = { name: "DESC" };
       }
-      combineLatest([this.productService.getAdvanceSearch({
-        order: this.order,
-        columnDef: this.filter,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
-      }), this.productService.getSearchFilter({
-        columnDef: this.filter
-      })]).subscribe(([products, filter]) => {
+      combineLatest([
+        this.productService.getClientPagination({
+          customerUserId: this.currentUser?.customerUserId,
+          order: this.order,
+          columnDef: this.filter,
+          pageIndex: this.pageIndex,
+          pageSize: this.pageSize
+        }),
+        this.productService.getSearchFilter({
+          columnDef: this.filter
+        })
+      ]
+      ).subscribe(([products, filter]) => {
         this.isLoading = false;
         if (products.success) {
           this.products = products.data.results.map(x => {
             x.interested = Number(x.interested ?? 0);
+            x.productImages = x.productImages.sort(
+              (a, b) => Number(a.productImageId) - Number(b.productImageId)
+            );
+
             return x;
           });
           this.totalItems = products.data.total;
           this.totalPages = Math.ceil(this.totalItems / this.pageSize);
           this.pages = this.generatePageArray();
+
         }
 
         if (filter.success) {
@@ -173,6 +185,7 @@ export class SearchComponent {
           type: "in"
         })
       }
+      this.goToPage(0);
       this.loadProducts();
     } else if (type === "COLLECTION") {
       if (this.filter.some(x => x.apiNotation === "collection.collectionId")) {
@@ -189,6 +202,7 @@ export class SearchComponent {
           type: "in"
         })
       }
+      this.goToPage(0);
       this.loadProducts();
     } else if (type === "COLOR") {
       if (this.filter.some(x => x.apiNotation === "color")) {
@@ -205,6 +219,7 @@ export class SearchComponent {
           type: "in"
         })
       }
+      this.goToPage(0);
       this.loadProducts();
     }
   }

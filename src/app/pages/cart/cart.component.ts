@@ -81,6 +81,7 @@ export class CartComponent {
     // Initialization logic can go here
     this.getItems();
     this.calculateDeliveryFee();
+    this.getActiveCoupon();
   }
 
   getItems() {
@@ -107,6 +108,21 @@ export class CartComponent {
         this.cartService.setCartCount(this.updatedCartItems.length);
       } else {
         console.error('No cart items found');
+      }
+    },
+      (error) => {
+        // handle error here
+        console.error('Error fetching cart items:', error);
+      }
+    );
+  }
+
+  getActiveCoupon() {
+    this.cartService.getActiveCoupon(this.currentUser.customerUserId).subscribe((res) => {
+      // handle next value here
+      if (res.success && res.data) {
+        this.currentDiscount = res.data?.discount;
+        this.promoCode = this.currentDiscount.promoCode;
       }
     },
       (error) => {
@@ -346,6 +362,7 @@ export class CartComponent {
         } else {
           this.promoCode = null;
           this.currentDiscount = null;
+          this.getActiveCoupon();
           this.error = res.message;
           this.snackBar.open(this.error, 'close', { panelClass: ['style-error'] });
           this.modalService.openResultModal({
@@ -361,6 +378,7 @@ export class CartComponent {
       , (res) => {
         this.promoCode = null;
         this.currentDiscount = null;
+        this.getActiveCoupon();
         this.isProcessing = false;
         this.loaderService.hide();
         this.error = res.error.message;

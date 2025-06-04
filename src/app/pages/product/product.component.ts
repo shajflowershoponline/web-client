@@ -4,9 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { CustomerUser } from 'src/app/model/customer-user';
 import { CustomerUserWishlist } from 'src/app/model/customer-user-wish-list.model';
+import { Discounts } from 'src/app/model/discounts';
 import { Product } from 'src/app/model/product';
 import { CartService } from 'src/app/services/cart.service';
 import { CustomerUserWishlistService } from 'src/app/services/customer-user-wish-list.service';
+import { DiscountsService } from 'src/app/services/discounts.service';
 import { ModalService, MODAL_TYPE } from 'src/app/services/modal.service';
 import { ProductService } from 'src/app/services/product.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -40,21 +42,13 @@ export class Productomponent {
     private readonly cartService: CartService,
     private snackBar: MatSnackBar,
     private modalService: ModalService,
-    private readonly customerUserWishlistService: CustomerUserWishlistService,
+    private readonly customerUserWishlistService: CustomerUserWishlistService
   ) {
     this.currentUser = this.storageService.getCurrentUser();
     this.sku = this.route.snapshot.paramMap.get('sku');
     this.cartService.cartCount$.subscribe(res => {
       this.cartCount = res;
     });
-  }
-
-  get productImage(): string[] {
-    if (this.product?.productImages?.[0]) {
-      return this.product?.productImages.map(x => x.file?.url);
-    } else {
-      return [this.getDeafaultPicture()];
-    }
   }
 
   ngOnInit(): void {
@@ -70,7 +64,8 @@ export class Productomponent {
 
       combineLatest([
         this.productService.getByCode(this.sku),
-        this.customerUserWishlistService.getBySKU(this.currentUser?.customerUserId, this.sku)])
+        this.customerUserWishlistService.getBySKU(this.currentUser?.customerUserId, this.sku),
+      ])
         .subscribe(([product, wishlist]) => {
           this.isLoading = false;
           if (product.success) {
@@ -90,138 +85,64 @@ export class Productomponent {
       this.snackBar.open(this.error, 'close', { panelClass: ['style-error'] });
     }
   }
-
   ngAfterViewInit(): void {
-    // Home 01 Slider
-    this.galleryThumbs = new Swiper('.single-product-thumb', {
-      spaceBetween: 10,
-      slidesPerView: 4,
-      loop: false,
-      freeMode: true,
-      loopAdditionalSlides: 5, //looped slides should be the same
-      watchSlidesProgress: true,
-      // Responsive breakpoints
-      breakpoints: {
-        // when window width is >= 320px
-        320: {
-          slidesPerView: 2,
-        },
-        // when window width is >= 575px
-        575: {
-          slidesPerView: 3,
-        },
-        // when window width is >= 767px
-        767: {
+    setTimeout(() => {
+      const thumbsEl = document.querySelector('.gallery-thumbs') as HTMLElement;
+      const mainEl = document.querySelector('.gallery-top') as HTMLElement;
+
+      if (thumbsEl && mainEl) {
+        this.galleryThumbs = new Swiper(thumbsEl, {
+          spaceBetween: 10,
           slidesPerView: 4,
-        },
-        // when window width is >= 991px
-        991: {
-          slidesPerView: 3,
-        },
-        // when window width is >= 1200px
-        1200: {
-          slidesPerView: 4,
-        },
+          watchSlidesProgress: true,
+        });
+
+        this.singleProductImg = new Swiper(mainEl, {
+          spaceBetween: 10,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          thumbs: {
+            swiper: this.galleryThumbs,
+          },
+        });
+
+        console.log('Swiper initialized');
+      } else {
+        console.warn('Swiper DOM elements not found');
       }
-    });
-    this.singleProductImg = new Swiper('.single-product-img', {
-      spaceBetween: 10,
-      loop: false,
-      loopAdditionalSlides: 5, //looped slides should be the same
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      thumbs: {
-        swiper: this.galleryThumbs,
-      },
-    });
-
-    // Product Carousel
-    this.productSlider = new Swiper('.product-slider', {
-      slidesPerView: 1,
-      spaceBetween: 10,
-      pagination: {
-        el: ".swiper-pagination",
-        type: 'bullets',
-        clickable: true,
-      },
-      //autoplay: {},
-      // Responsive breakpoints
-      breakpoints: {
-        // when window width is >= 320px
-        320: {
-          slidesPerView: 1,
-          spaceBetween: 10
-        },
-        // when window width is >= 480px
-        480: {
-          slidesPerView: 2,
-          spaceBetween: 10
-        },
-        // when window width is >= 767px
-        768: {
-          slidesPerView: 3,
-          spaceBetween: 10
-        },
-        // when window width is >= 1200px
-        1200: {
-          slidesPerView: 4,
-          spaceBetween: 10
-        },
-      }
-    });
-
-    // item Carousel 2
-    this.itemCarousel2 = new Swiper('.item-carousel-2', {
-      slidesPerView: 1,
-      spaceBetween: 10,
-      pagination: {
-        el: ".swiper-pagination",
-        type: 'bullets',
-        clickable: true,
-      },
-      //autoplay: {},
-      // Responsive breakpoints
-      breakpoints: {
-        // when window width is >= 480px
-        480: {
-          slidesPerView: 1,
-        },
-        // when window width is >= 575px
-        575: {
-          slidesPerView: 2,
-        },
-        // when window width is >= 767px
-        767: {
-          slidesPerView: 2,
-        },
-        // when window width is >= 991px
-        991: {
-          slidesPerView: 2,
-        },
-        // when window width is >= 1200px
-        1200: {
-          slidesPerView: 3,
-        },
-      }
-    });
-
-    // Testimonial Carousel
-    this.testimonialCarousel = new Swiper('.testimonial-carousel', {
-      loop: true,
-      speed: 800,
-      slidesPerView: 1,
-      spaceBetween: 10,
-      effect: 'slide',
-      navigation: {
-        nextEl: '.home1-slider-next',
-        prevEl: '.home1-slider-prev',
-      },
-      //autoplay: {},
-
-    });
+    }, 0);
   }
+
+  ngAfterViewChecked(): void {
+    if (this.product?.productImages.length && !this.singleProductImg) {
+      setTimeout(() => {
+        const thumbsEl = document.querySelector('.gallery-thumbs') as HTMLElement;
+        const mainEl = document.querySelector('.gallery-top') as HTMLElement;
+
+        if (thumbsEl && mainEl) {
+          this.galleryThumbs = new Swiper(thumbsEl, {
+            spaceBetween: 10,
+            slidesPerView: 4,
+            watchSlidesProgress: true,
+          });
+
+          this.singleProductImg = new Swiper(mainEl, {
+            spaceBetween: 10,
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            },
+            thumbs: {
+              swiper: this.galleryThumbs,
+            },
+          });
+        }
+      }, 100); // small delay to ensure DOM is stable
+    }
+  }
+
 
   pictureErrorHandler(event) {
     event.target.src = this.getDeafaultPicture();
