@@ -95,10 +95,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "shaj-flower-shop-web-client:build:production"
+              "buildTarget": "shaj-flower-shop-web-client:build:production",
+              "proxyConfig": "proxy.conf.json"
             },
             "development": {
-              "buildTarget": "shaj-flower-shop-web-client:build:development"
+              "buildTarget": "shaj-flower-shop-web-client:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
