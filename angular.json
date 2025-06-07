@@ -46,7 +46,7 @@
               "src/assets/css/plugins/jquery-ui.min.css",
               "src/assets/css/plugins/nice-select.min.css",
               "src/assets/css/plugins/magnific-popup.css",
-              "src/assets/css/style.css",
+              "src/assets/css/style.css"
             ],
             "scripts": [
               "src/assets/js/vendor/jquery-3.6.0.min.js",

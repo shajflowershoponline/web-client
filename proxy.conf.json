@@ -1,14 +1,20 @@
 {
-  "/dev/content/": {
-    "target": "http://localhost:4300/about-us",
+  "/dev/content": {
+    "target": "http://localhost:4300",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/dev/content": "/about-us"
+    }
   },
   "/prod/content/": {
-    "target": "https://shaj-flower-shop-web-client-ochre.vercel.app/about-us",
+    "target": "https://shaj-flower-shop-web-client-ochre.vercel.app",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/dev/content": "/about-us"
+    }
   }
 }
