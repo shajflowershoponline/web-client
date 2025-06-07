@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './shared/guard/auth.guard';
+import { HistoryComponent } from './pages/about-us/history/history.component';
 
 
 
@@ -46,6 +47,11 @@ const routes: Routes = [
     path: 'about-us',
     data: { title: 'About Us' },
     loadChildren: () => import('./pages/about-us/about-us.module').then(m => m.AboutUsModule)
+  },
+  {
+    path: 'history',
+    data: { title: 'History' },
+    component: HistoryComponent
   },
   {
     path: 'contact-us',
